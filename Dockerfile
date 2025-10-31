@@ -3,6 +3,8 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 ENV CI=true
+ARG VITE_GOOGLE_API_KEY
+ENV VITE_GOOGLE_API_KEY=$VITE_GOOGLE_API_KEY
 COPY package*.json ./
 RUN npm ci --include=dev
 COPY . .
