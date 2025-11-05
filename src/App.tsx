@@ -100,7 +100,7 @@ export function App() {
     try {
       const ctrl = new AbortController();
       setController(ctrl);
-      const webhookUrl = 'http://localhost:5678/webhook/ad-library-url';
+      const webhookUrl = 'https://primary-production-42b2b.up.railway.app/webhook/ad-library-url';
       const response = await fetch(webhookUrl, {
         method: 'POST',
         headers: {
