@@ -201,9 +201,18 @@ export function App() {
       }} transition={{
         duration: 0.8,
         delay: 0.2
-      }} className="w-full max-w-2xl">
+      }} className={`w-full ${isLoading || videoUrl ? 'max-w-6xl' : 'max-w-2xl'}`}>
+          <motion.div 
+            layout
+            className={`flex flex-col lg:flex-row gap-8 items-start ${isLoading || videoUrl ? '' : 'lg:justify-center'}`}
+            transition={{ duration: 0.5, ease: 'easeInOut' }}
+          >
           {/* Input Card */}
-          <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl">
+          <motion.div 
+            layout
+            className={`bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl ${isLoading || videoUrl ? 'flex-1' : 'w-full'}`}
+            transition={{ duration: 0.5, ease: 'easeInOut' }}
+          >
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label htmlFor="adUrl" className="block text-sm font-medium text-slate-300 mb-2">
@@ -301,54 +310,76 @@ export function App() {
                   </motion.div>}
               </AnimatePresence>
             </form>
-          </div>
-          {/* Video Display */}
-          <AnimatePresence>
-            {videoUrl && <motion.div initial={{
-            opacity: 0,
-            y: 20
-          }} animate={{
-            opacity: 1,
-            y: 0
-          }} exit={{
-            opacity: 0,
-            y: 20
-          }} transition={{
-            duration: 0.5
-          }} className="mt-8 bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 shadow-2xl">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-sm font-medium text-slate-300">
-                    Final Output
-                  </h3>
-                  <a href={videoUrl} download={downloadFileName} className="flex items-center gap-2 text-sm text-cyan-400 hover:text-cyan-300 transition-colors">
-                    <DownloadIcon className="w-4 h-4" />
-                    Download
-                  </a>
-                </div>
-                <video src={videoUrl} controls playsInline className="w-full rounded-xl border border-white/10 bg-black" />
-              </motion.div>}
-          </AnimatePresence>
-          {/* Skeleton while loading */}
-          <AnimatePresence>
-            {isLoading && !videoUrl && !error && <motion.div initial={{
-            opacity: 0,
-            y: 20
-          }} animate={{
-            opacity: 1,
-            y: 0
-          }} exit={{
-            opacity: 0,
-            y: 20
-          }} transition={{
-            duration: 0.3
-          }} className="mt-8 bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 shadow-2xl">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="h-4 w-28 bg-white/10 rounded animate-pulse" />
-                  <div className="h-4 w-20 bg-white/10 rounded animate-pulse" />
-                </div>
-                <div className="w-full aspect-video rounded-xl border border-white/10 bg-slate-900 animate-pulse" />
-              </motion.div>}
-          </AnimatePresence>
+          </motion.div>
+          {/* Video Display & Skeleton - Right Column */}
+          {(isLoading || videoUrl) && (
+            <motion.div 
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 50 }}
+              transition={{ duration: 0.5, ease: 'easeInOut' }}
+              className="flex-1 lg:max-w-md w-full"
+            >
+              <AnimatePresence mode="wait">
+                {videoUrl && <motion.div 
+                  key="video"
+                  initial={{
+                    opacity: 0,
+                    y: 20
+                  }} 
+                  animate={{
+                    opacity: 1,
+                    y: 0
+                  }} 
+                  exit={{
+                    opacity: 0,
+                    y: 20
+                  }} 
+                  transition={{
+                    duration: 0.5
+                  }} 
+                  className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 shadow-2xl"
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="text-sm font-medium text-slate-300">
+                      Final Output
+                    </h3>
+                    <a href={videoUrl} download={downloadFileName} className="flex items-center gap-2 text-sm text-cyan-400 hover:text-cyan-300 transition-colors">
+                      <DownloadIcon className="w-4 h-4" />
+                      Download
+                    </a>
+                  </div>
+                  <video src={videoUrl} controls playsInline className="w-full aspect-[9/16] rounded-xl border border-white/10 bg-black" />
+                </motion.div>}
+                {isLoading && !videoUrl && !error && <motion.div 
+                  key="skeleton"
+                  initial={{
+                    opacity: 0,
+                    y: 20
+                  }} 
+                  animate={{
+                    opacity: 1,
+                    y: 0
+                  }} 
+                  exit={{
+                    opacity: 0,
+                    y: 20
+                  }} 
+                  transition={{
+                    duration: 0.3
+                  }} 
+                  className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 shadow-2xl"
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="h-4 w-28 bg-white/10 rounded animate-pulse" />
+                    <div className="h-4 w-20 bg-white/10 rounded animate-pulse" />
+                  </div>
+                  <div className="w-full aspect-[9/16] rounded-xl border border-white/10 bg-slate-900 animate-pulse" />
+                </motion.div>}
+              </AnimatePresence>
+            </motion.div>
+          )}
+          </motion.div>
         </motion.div>
       </main>
       {/* Animated Background Elements */}
